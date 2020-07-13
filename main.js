@@ -10,19 +10,19 @@ let player = {
 }
 createDivGrid(grid);
 
-
-
 function createGridArray() {
-    return [ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 2, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ]
+    return [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
 }
 
 function createDivGrid(grid) {
@@ -31,6 +31,7 @@ function createDivGrid(grid) {
             let divElement = document.createElement('div');
             divElement.dataset.row = row;
             divElement.dataset.column = column;
+            divElement.id = '[' + row + '][' + column + ']';
             divElement.addEventListener('click', changeColour);
             if (grid[row][column] == 1) {
                 divElement.classList.add('grey');
@@ -52,4 +53,27 @@ function changeColour(e) {
         e.target.classList.remove('grey');
         grid[e.target.dataset.row][e.target.dataset.column] = 0;
     }
+}
+
+document.addEventListener('keydown', keyDownHandler);
+
+function keyDownHandler(e) {
+    if ((e.key == 'ArrowUp' || e.key.toLowerCase() == 'w') && player.row != 0) {
+        movePlayer(player.row - 1, Number(player.column));
+    } else if ((e.key == 'ArrowLeft' || e.key.toLowerCase() == 'a') && player.column != 0) {
+        movePlayer(Number(player.row), player.column - 1);
+    } else if ((e.key == 'ArrowDown' || e.key.toLowerCase() == 's') && player.row != numberOfRows - 1) {
+        movePlayer(player.row + 1, Number(player.column));
+    } else if ((e.key == 'ArrowRight' || e.key.toLowerCase() == 'd') && player.column != numberOfColumns - 1) {
+        movePlayer(Number(player.row), player.column + 1);
+    }
+}
+
+function movePlayer(newRow, newColumn) {
+    grid[player.row][player.column] = 0;
+    document.getElementById('[' + player.row + '][' + player.column + ']').classList.remove('player');
+    player.row = newRow;
+    player.column = newColumn;
+    grid[player.row][player.column] = 2;
+    document.getElementById('[' + player.row + '][' + player.column + ']').classList.add('player');
 }
